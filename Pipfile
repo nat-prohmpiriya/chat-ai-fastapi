@@ -8,11 +8,16 @@ langchain = "*"
 openai = "*"
 python-dotenv = "*"
 motor = "*"
+fastapi = "*"
+uvicorn = "*"
+pydantic = {extras = ["email"], version = "*"}
+pydantic-settings = "*"
 python-jose = {extras = ["cryptography"], version = "*"}
 passlib = {extras = ["bcrypt"], version = "*"}
 python-multipart = "*"
-fastapi = "*"
-uvicorn = "*"
+email-validator = "*"
+beanie = "*"
+bcrypt = "==3.2.0"
 
 [dev-packages]
 

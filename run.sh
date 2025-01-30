@@ -1,3 +1,3 @@
-#!/user/bin/env bash
+#!/bin/bash
 
-pipenv run python main.py
+pipenv run uvicorn src.main:app --reload --port 5001

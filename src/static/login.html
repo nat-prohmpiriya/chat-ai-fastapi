@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AI Chat</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div id="app" class="min-h-screen flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+            <h1 class="text-2xl font-bold mb-6 text-center">{{ isRegister ? 'Register' : 'Login' }}</h1>
+            
+            <!-- Login/Register Form -->
+            <form @submit.prevent="submitForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" v-model="email" required
+                           class="w-full p-2 border rounded focus:outline-none focus:border-blue-500">
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <input type="password" v-model="password" required
+                           class="w-full p-2 border rounded focus:outline-none focus:border-blue-500">
+                </div>
+
+                <button type="submit" 
+                        class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                        :disabled="isLoading">
+                    {{ isLoading ? 'Processing...' : (isRegister ? 'Register' : 'Login') }}
+                </button>
+            </form>
+
+            <!-- Toggle Register/Login -->
+            <div class="mt-4 text-center">
+                <button @click="isRegister = !isRegister" class="text-blue-500 hover:underline">
+                    {{ isRegister ? 'Already have an account? Login' : 'Need an account? Register' }}
+                </button>
+            </div>
+
+            <!-- Error Message -->
+            <div v-if="error" class="mt-4 text-red-500 text-center">
+                {{ error }}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    email: '',
+                    password: '',
+                    isRegister: false,
+                    isLoading: false,
+                    error: ''
+                }
+            },
+            methods: {
+                async submitForm() {
+                    this.error = ''
+                    this.isLoading = true
+
+                    try {
+                        const endpoint = this.isRegister ? '/auth/register' : '/auth/login'
+                        const body = this.isRegister 
+                            ? JSON.stringify({ email: this.email, password: this.password })
+                            : new URLSearchParams({
+                                'username': this.email,
+                                'password': this.password
+                            })
+
+                        const response = await fetch(endpoint, {
+                            method: 'POST',
+                            headers: this.isRegister 
+                                ? { 'Content-Type': 'application/json' }
+                                : { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: body
+                        })
+
+                        const data = await response.json()
+                        
+                        if (response.ok) {
+                            if (!this.isRegister) {
+                                // Save token
+                                localStorage.setItem('token', data.access_token)
+                                // Redirect to chat
+                                window.location.href = '/static/index.html'
+                            } else {
+                                // Switch to login after successful registration
+                                this.isRegister = false
+                                this.error = 'Registration successful! Please login.'
+                            }
+                        } else {
+                            throw new Error(data.message || 'Something went wrong')
+                        }
+                    } catch (error) {
+                        this.error = error.message
+                    } finally {
+                        this.isLoading = false
+                    }
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html>

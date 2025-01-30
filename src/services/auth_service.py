@@ -16,7 +16,7 @@ class AuthService:
         
         user = User(
             email=email,
-            hashed_password=self._hash_password(password) 
+            hashed_password=self.hash_password(password) 
         )
         await user.create()
         

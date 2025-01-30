@@ -4,19 +4,23 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-langchain = "*"
-openai = "*"
-python-dotenv = "*"
-motor = "*"
 fastapi = "*"
 uvicorn = "*"
+python-dotenv = "*"
+langchain = "*"
+langchain-openai = "*"
+langchain-anthropic = "*"
+google-generativeai = "*"
+beanie = "*"
+python-jose = {extras = ["cryptography"], version = "*"}
+python-multipart = "*"
+openai = "*"
+anthropic = "*"
+motor = "*"
 pydantic = {extras = ["email"], version = "*"}
 pydantic-settings = "*"
-python-jose = {extras = ["cryptography"], version = "*"}
 passlib = {extras = ["bcrypt"], version = "*"}
-python-multipart = "*"
 email-validator = "*"
-beanie = "*"
 bcrypt = "==3.2.0"
 loguru = "*"
 

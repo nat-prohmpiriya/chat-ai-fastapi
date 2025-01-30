@@ -3,10 +3,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
+from fastapi.staticfiles import StaticFiles
 
 from src.config.settings import settings
 from src.models.user_model import User
-from src.routes import auth_route, user_route
+from src.routes import auth_route, user_route, chat_route
 from src.middlewares.request_middleware import request_middleware
 
 # 1. Create FastAPI app
@@ -45,6 +46,10 @@ async def init_db():
 # 4. Add routes
 app.include_router(auth_route.router)
 app.include_router(user_route.router)
+app.include_router(chat_route.router)
+
+# 5. Mount static files
+app.mount("/static", StaticFiles(directory="src/static"), name="static")
 
 # 5. Health check
 @app.get("/health")

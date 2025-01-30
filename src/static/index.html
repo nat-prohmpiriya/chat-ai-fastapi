@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Interface</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .chat-container {
+            height: calc(100vh - 200px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div id="app" class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <!-- Model Selection -->
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">AI Model</label>
+                <select v-model="selectedModel" class="w-full p-2 border rounded">
+                    <option value="openai">OpenAI</option>
+                    <option value="anthropic">Anthropic</option>
+                    <option value="gemini">Gemini</option>
+                </select>
+            </div>
+
+            <!-- Model Settings -->
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold mb-2">Settings</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Temperature</label>
+                        <input type="range" v-model="config.temperature" min="0" max="1" step="0.1" 
+                               class="w-full">
+                        <span class="text-sm text-gray-600">{{ config.temperature }}</span>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Max Tokens</label>
+                        <input type="number" v-model="config.max_tokens" min="100" max="4000" 
+                               class="w-full p-2 border rounded">
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">System Message</label>
+                    <textarea v-model="config.system_message" 
+                              class="w-full p-2 border rounded" rows="2"></textarea>
+                </div>
+            </div>
+
+            <!-- Chat Interface -->
+            <div class="chat-container overflow-y-auto border rounded p-4 mb-4">
+                <div v-for="(msg, index) in messages" :key="index" 
+                     class="mb-4" :class="{'text-right': msg.isUser}">
+                    <div class="inline-block max-w-3xl px-4 py-2 rounded-lg" 
+                         :class="msg.isUser ? 'bg-blue-500 text-white' : 'bg-gray-200'">
+                        <p class="text-sm">{{ msg.text }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="flex gap-2">
+                <input type="text" v-model="userInput" @keyup.enter="sendMessage"
+                       class="flex-1 p-2 border rounded" placeholder="Type your message...">
+                <button @click="sendMessage" 
+                        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        :disabled="isLoading">
+                    {{ isLoading ? 'Sending...' : 'Send' }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    selectedModel: 'openai',
+                    config: {
+                        temperature: 0.7,
+                        max_tokens: 1000,
+                        system_message: 'You are a helpful assistant.'
+                    },
+                    messages: [],
+                    userInput: '',
+                    isLoading: false
+                }
+            },
+            methods: {
+                async sendMessage() {
+                    if (!this.userInput.trim() || this.isLoading) return
+
+                    const userMessage = this.userInput
+                    this.messages.push({ text: userMessage, isUser: true })
+                    this.userInput = ''
+                    this.isLoading = true
+
+                    try {
+                        const response = await fetch('/api/chat', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            },
+                            body: JSON.stringify({
+                                provider: this.selectedModel,
+                                message: userMessage,
+                                config: this.config
+                            })
+                        })
+
+                        const data = await response.json()
+                        if (response.ok) {
+                            this.messages.push({ text: data.message, isUser: false })
+                        } else {
+                            throw new Error(data.detail || 'Something went wrong')
+                        }
+                    } catch (error) {
+                        alert(error.message)
+                    } finally {
+                        this.isLoading = false
+                    }
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+FROM python:3.9
+
+WORKDIR /app
+
+# Install pipenv
+RUN pip install pipenv
+
+# Copy dependency files
+COPY Pipfile Pipfile.lock ./
+
+# Install dependencies including development packages
+RUN pipenv install --dev
+
+# Copy source code
+COPY . .
+
+# Expose port
+EXPOSE 5001
+
+# Run with hot reload
+CMD ["pipenv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5001", "--reload"]

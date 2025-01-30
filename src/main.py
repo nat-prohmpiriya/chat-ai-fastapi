@@ -7,6 +7,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from src.config.settings import settings
 from src.models.user_model import User
 from src.routes import auth_route, user_route
+from src.middlewares.request_middleware import request_middleware
 
 # 1. Create FastAPI app
 app = FastAPI(
@@ -28,6 +29,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Add request middleware
+app.middleware("http")(request_middleware)
 
 # 3. Database initialization
 @app.on_event("startup")

@@ -1,0 +1,8 @@
+2025-01-31 01:57:37.207 | 87e38d7d-fde1-461d-9496-196dab3be7f5 | req: GET /users/me | b''
+2025-01-31 01:57:37.255 | 87e38d7d-fde1-461d-9496-196dab3be7f5 | res: 200 | {'_id': '679ba5fe2c894004ca750626', 'email': 'user1@example.com', 'hashed_password': '$2b$12$Z89NB93RKWLtJHW1ccYa/eU60uI5b9ECo5ie51ycuNSAY8T2X6bvC', 'is_active': True, 'deleted_at': None}
+2025-01-31 01:57:39.715 | d79f1662-22a9-4629-869e-5479377076f3 | req: GET /users/me | b''
+2025-01-31 01:57:39.752 | d79f1662-22a9-4629-869e-5479377076f3 | res: 200 | {'_id': '679ba5fe2c894004ca750626', 'email': 'user1@example.com', 'hashed_password': '$2b$12$Z89NB93RKWLtJHW1ccYa/eU60uI5b9ECo5ie51ycuNSAY8T2X6bvC', 'is_active': True, 'deleted_at': None}
+2025-01-31 01:57:47.934 | 4f400527-2e30-4323-b36f-1e01f99ca1b2 | req: GET /users/me | b''
+2025-01-31 01:57:47.973 | 4f400527-2e30-4323-b36f-1e01f99ca1b2 | res: 200 | {'_id': '679ba5fe2c894004ca750626', 'email': 'user1@example.com', 'hashed_password': '$2b$12$Z89NB93RKWLtJHW1ccYa/eU60uI5b9ECo5ie51ycuNSAY8T2X6bvC', 'is_active': True, 'deleted_at': None}
+2025-01-31 01:57:50.911 | 572c694e-a576-4627-851e-5a8ae9c5fd1f | req: GET /users/me | b''
+2025-01-31 01:57:50.946 | 572c694e-a576-4627-851e-5a8ae9c5fd1f | res: 200 | {'_id': '679ba5fe2c894004ca750626', 'email': 'user1@example.com', 'hashed_password': '$2b$12$Z89NB93RKWLtJHW1ccYa/eU60uI5b9ECo5ie51ycuNSAY8T2X6bvC', 'is_active': True, 'deleted_at': None}

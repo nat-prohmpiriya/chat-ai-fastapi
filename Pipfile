@@ -18,6 +18,7 @@ python-multipart = "*"
 email-validator = "*"
 beanie = "*"
 bcrypt = "==3.2.0"
+loguru = "*"
 
 [dev-packages]
 
